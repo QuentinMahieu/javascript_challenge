@@ -137,7 +137,9 @@ select {
   /* Firefox 18- */
   color: #8e979f;
 }
-
+#choice option{
+  font-size: x-small;
+}
 /* media queries which will only be activated at specific screen sizes */
 @media (max-width: 800px) {
   #table-area td {
