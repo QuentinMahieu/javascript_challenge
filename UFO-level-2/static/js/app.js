@@ -1,86 +1,255 @@
 // from data.js
 var tableData = data;
 
-// YOUR CODE HERE!
-var tbody = d3.select('tbody');
-
-tableData.forEach((ufo) => {
-    var row = tbody.append('tr');
-    Object.entries(ufo).forEach(([key,value]) =>{
-        var cell = row.append('td');
+// create a function to make the table
+function makeTable(data){
+    var tbody = d3.select("#ufo-table").select("tbody");
+    tbody.html("");
+    data.forEach((x) => {
+    var row = tbody.append("tr");
+    Object.entries(x).forEach(([key, value]) => {
+        var cell = row.append("td");
         cell.text(value);
+        });
     });
-});
+};
 
-var dropDate = d3.select('#mylist-Date')
-var dropCity = d3.select('#mylist-City')
-var dropState = d3.select('#mylist-State')
-var dropCountry = d3.select('#mylist-Country')
-var dropShape = d3.select('#mylist-Shape')
-
-
-tableData.forEach(function(ufo) {
-    var uniqueDate = [];
-    if (uniqueDate.indexOf(ufo.datetime) === -1){
-        uniqueDate.push(ufo.datetime);
-        var optionDate = dropDate.append('option');
-        optionDate.text(ufo.datetime);
+// function to append the unique data in the dropdown menu
+function dropdownValues(data,tag,key){
+    d3.selectAll(tag + '> option').remove();
+    var dropDown = d3.select(tag);
+    dropDown.append('option').text('All');
+    var values = data.map(x => x = x[key]).sort();
+    var unique = []
+    for(var i=0; i< values.length;i++){
+        if (unique.includes(values[i]) === false){
+            unique.push(values[i]);
+            var option = dropDown.append('option');
+            option.text(values[i]);
+        };
     };
-    //console.log(uniqueDate)
-    var uniqueCity = [];
-    if (uniqueDate.indexOf(ufo.city) === -1){
-        uniqueCity.push(ufo.city);
-        var optionCity = dropCity.append('option');
-        optionCity.text(ufo.city);
-    }; 
-    var uniqueState = [];
-    if (uniqueState.indexOf(ufo.state) === -1){
-        uniqueState.push(ufo.state);
-        var optionState = dropState.append('option');
-        optionState.text(ufo.state);
-    }; 
-    var uniqueCountry = [];
-    if (uniqueCountry.indexOf(ufo.country) === -1){
-        uniqueCountry.push(ufo.country);
-        var optionCountry = dropCountry.append('option');
-        optionCountry.text(ufo.country);
-    };
-    var uniqueShape = [];
-    if (uniqueShape.indexOf(ufo.shape) === -1){
-        uniqueShape.push(ufo.shape);
-        var optionShape = dropShape.append('option');
-        optionShape.text(ufo.shape);
-    };
-});
+};
+dropdownValues(tableData,'#mylist-Date','datetime');
+dropdownValues(tableData,'#mylist-City','city');
+dropdownValues(tableData,'#mylist-State','state');
+dropdownValues(tableData,'#mylist-Country','country');
+dropdownValues(tableData,'#mylist-Shape','shape');
 
-dropDate.on('change',runEnter);
-dropCity.on('change',runEnter);
-dropState.on('change',runEnter);
-dropCountry.on('change',runEnter);
-dropShape.on('change',runEnter);
+var dropDate = d3.select("#mylist-Date");
+var dropCity = d3.select("#mylist-City");
+var dropState = d3.select("#mylist-State");
+var dropCountry = d3.select("#mylist-Country");
+var dropShape = d3.select("#mylist-Shape");
 
-function runEnter() {
+dropDate.on("change", runSelect);
+dropCity.on('change', runSelect);
+dropState.on('change', runSelect);
+dropCountry.on('change', runSelect);
+dropShape.on('change', runSelect);
+
+function runSelect(){
+    filteredData = tableData
     // Prevent the page from refreshing
     d3.event.preventDefault();
-    // Select the input element and get the raw HTML node
-    var date = dropDate.property('value');
-    var city = dropCity.property('value');
-    var state = dropState.property('value');
-    var country = dropCountry.property('value');
-    var shape = dropShape.property('value');
-    // filter the data
-    if (date !== 'All') {
-        
-    }
-    
-    //creates the table with the filtered data
-    var tbody = d3.select('tbody');
-    tbody.selectAll('tr').remove();
-    filteredData.forEach((ufo) => {
-        var row = tbody.append("tr");
-        Object.entries(ufo).forEach(([key, value]) => {
-          var cell = row.append("td");
-          cell.text(value);
-        });
-      });
-    }
+    // get the values chosen
+    var date = dropDate.node().value;
+    var city = dropCity.node().value;
+    var state = dropState.node().value;
+    var country = dropCountry.node().value;
+    var shape = dropShape.node().value;
+
+    if (date !== 'All'){
+        var filteredData = tableData.filter(x => x.datetime === date);
+        dropdownValues(filteredData,'#mylist-City','city');
+        dropdownValues(filteredData,'#mylist-State','state');
+        dropdownValues(filteredData,'#mylist-Country','country');
+        dropdownValues(filteredData,'#mylist-Shape','shape');
+        if (city !== 'All'){
+            var filteredData = filteredData.filter(x => x.city === city);
+            dropdownValues(filteredData,'#mylist-State','state');
+            dropdownValues(filteredData,'#mylist-Country','country');
+            dropdownValues(filteredData,'#mylist-Shape','shape');
+            if (state !== 'All'){
+                var filteredData = filteredData.filter(x => x.state === state);
+                dropdownValues(filteredData,'#mylist-Country','country');
+                dropdownValues(filteredData,'#mylist-Shape','shape');
+                if (country !== 'All'){
+                    var filteredData = filteredData.filter(x => x.country === country);
+                    dropdownValues(filteredData,'#mylist-Shape','shape');
+                    if (shape !== 'All'){
+                        var filteredData = filteredData.filter(x => x.shape === shape);
+                    }
+                }else{
+                    if (shape !== 'All'){
+                        var filteredData = filteredData.filter(x => x.shape === shape);
+                        dropdownValues(filteredData,'#mylist-Country','country');
+                    }
+                }
+            }else{
+                if (country !== 'All'){
+                    var filteredData = filteredData.filter(x => x.country === country);
+                    dropdownValues(filteredData,'#mylist-State','state');
+                    dropdownValues(filteredData,'#mylist-Shape','shape');
+                    if (shape !== 'All'){
+                        var filteredData = filteredData.filter(x => x.shape === shape);
+                        dropdownValues(filteredData,'#mylist-State','state');
+                    }
+                }else{
+                    if (shape !== 'All'){
+                        var filteredData = filteredData.filter(x => x.shape === shape);
+                        dropdownValues(filteredData,'#mylist-Country','country');
+                        dropdownValues(filteredData,'#mylist-State','state');
+                    }
+                }
+            }
+        }else{
+            if (state !== 'All'){
+                var filteredData = filteredData.filter(x => x.state === state);
+                dropdownValues(filteredData,'#mylist-City','city');
+                dropdownValues(filteredData,'#mylist-Country','country');
+                dropdownValues(filteredData,'#mylist-Shape','shape');
+                if (country !== 'All'){
+                    var filteredData = filteredData.filter(x => x.country === country);
+                    dropdownValues(filteredData,'#mylist-City','city');
+                    dropdownValues(filteredData,'#mylist-Shape','shape');
+                    if (shape !== 'All'){
+                        var filteredData = filteredData.filter(x => x.shape === shape);
+                        dropdownValues(filteredData,'#mylist-City','city');
+                    }
+                }else{
+                    if (shape !== 'All'){
+                        var filteredData = filteredData.filter(x => x.shape === shape);
+                        dropdownValues(filteredData,'#mylist-City','city');
+                        dropdownValues(filteredData,'#mylist-Country','country');
+                        dropdownValues(filteredData,'#mylist-Shape','shape');
+                    }
+                }
+            }else{
+                if (country !== 'All'){
+                    var filteredData = filteredData.filter(x => x.country === country);
+                    dropdownValues(filteredData,'#mylist-State','state');
+                    dropdownValues(filteredData,'#mylist-City','city');
+                    dropdownValues(filteredData,'#mylist-Shape','shape');
+                    if (shape !== 'All'){
+                        var filteredData = filteredData.filter(x => x.shape === shape);
+                        dropdownValues(filteredData,'#mylist-City','city');
+                        dropdownValues(filteredData,'#mylist-State','state');
+                    }
+                }else{
+                    if (shape !== 'All'){
+                        var filteredData = filteredData.filter(x => x.shape === shape);
+                        dropdownValues(filteredData,'#mylist-City','city');
+                        dropdownValues(filteredData,'#mylist-State','state');
+                        dropdownValues(filteredData,'#mylist-Country','country');
+                        dropdownValues(filteredData,'#mylist-Shape','shape');
+                    }
+                }
+            }
+        }
+    }else {
+        if (city !== 'All'){
+            var filteredData = tableData.filter(x => x.city === city);
+            dropdownValues(filteredData,'#mylist-Date','datetime');
+            dropdownValues(filteredData,'#mylist-State','state');
+            dropdownValues(filteredData,'#mylist-Country','country');
+            dropdownValues(filteredData,'#mylist-Shape','shape');
+            if (state !== 'All'){
+                var filteredData = filteredData.filter(x => x.state === state);
+                dropdownValues(filteredData,'#mylist-Date','datetime');
+                dropdownValues(filteredData,'#mylist-Country','country');
+                dropdownValues(filteredData,'#mylist-Shape','shape');
+                if (country !== 'All'){
+                    var filteredData = filteredData.filter(x => x.country === country);
+                    dropdownValues(filteredData,'#mylist-Date','datetime');
+                    dropdownValues(filteredData,'#mylist-Shape','shape');
+                    if (shape !== 'All'){
+                        var filteredData = filteredData.filter(x => x.shape === shape);
+                        dropdownValues(filteredData,'#mylist-Date','datetime');
+                    }
+                }else{
+                    if (shape !== 'All'){
+                    var filteredData = filteredData.filter(x => x.shape === shape);
+                    dropdownValues(filteredData,'#mylist-Country','country');
+                    dropdownValues(filteredData,'#mylist-Date','datetime');
+                    }
+                }
+            }else{
+                if (country !== 'All'){
+                    var filteredData = filteredData.filter(x => x.country === country);
+                    dropdownValues(filteredData,'#mylist-State','state');
+                    dropdownValues(filteredData,'#mylist-Date','datetime');
+                    dropdownValues(filteredData,'#mylist-Shape','shape');
+                    if (shape !== 'All'){
+                        var filteredData = filteredData.filter(x => x.shape === shape);
+                        dropdownValues(filteredData,'#mylist-Date','datetime');
+                        dropdownValues(filteredData,'#mylist-State','state');
+                    }
+                }else{
+                    if (shape !== 'All'){
+                        var filteredData = filteredData.filter(x => x.shape === shape);
+                        dropdownValues(filteredData,'#mylist-Country','country');
+                        dropdownValues(filteredData,'#mylist-Date','datetime');
+                        dropdownValues(filteredData,'#mylist-State','state');
+                    }
+                }
+            }
+        }else{
+            if (state !== 'All'){
+                var filteredData = tableData.filter(x => x.state === state);
+                dropdownValues(filteredData,'#mylist-City','city');
+                dropdownValues(filteredData,'#mylist-Date','datetime');
+                dropdownValues(filteredData,'#mylist-Country','country');
+                dropdownValues(filteredData,'#mylist-Shape','shape');
+                if (country !== 'All'){
+                    var filteredData = filteredData.filter(x => x.country === country);
+                    dropdownValues(filteredData,'#mylist-City','city');
+                    dropdownValues(filteredData,'#mylist-Date','date');
+                    dropdownValues(filteredData,'#mylist-Shape','shape');
+                    if (shape !== 'All'){
+                        var filteredData = filteredData.filter(x => x.shape === shape);
+                        dropdownValues(filteredData,'#mylist-City','city');
+                        dropdownValues(filteredData,'#mylist-Date','datetime');
+                    }
+                }else{
+                    if (shape !== 'All'){
+                        var filteredData = filteredData.filter(x => x.shape === shape);
+                        dropdownValues(filteredData,'#mylist-City','city');
+                        dropdownValues(filteredData,'#mylist-Country','country');
+                        dropdownValues(filteredData,'#mylist-Date','datetime');
+                    }
+                }
+            }else{
+                if (country !== 'All'){
+                    var filteredData = tableData.filter(x => x.country === country);
+                    dropdownValues(filteredData,'#mylist-City','city');
+                    dropdownValues(filteredData,'#mylist-State','state');
+                    dropdownValues(filteredData,'#mylist-Date','datetime');
+                    dropdownValues(filteredData,'#mylist-Shape','shape');
+                    if (shape !== 'All'){
+                        var filteredData = filteredData.filter(x => x.shape === shape);
+                        dropdownValues(filteredData,'#mylist-City','city');
+                        dropdownValues(filteredData,'#mylist-State','state');
+                        dropdownValues(filteredData,'#mylist-Date','datetime');
+                    }
+                }else{
+                    if (shape !== 'All'){
+                            var filteredData = tableData.filter(x => x.shape === shape);
+                            dropdownValues(filteredData,'#mylist-City','city');
+                            dropdownValues(filteredData,'#mylist-State','state');
+                            dropdownValues(filteredData,'#mylist-Country','country');
+                            dropdownValues(filteredData,'#mylist-Date','datetime');
+                    }else{
+                    dropdownValues(filteredData,'#mylist-City','city');
+                    dropdownValues(filteredData,'#mylist-Date','datetime');
+                    dropdownValues(filteredData,'#mylist-State','state');
+                    dropdownValues(filteredData,'#mylist-Country','country');
+                    dropdownValues(filteredData,'#mylist-Shape','shape');
+                    }
+                }
+            }
+        }
+    };
+    makeTable(filteredData);
+};
+
+makeTable(tableData);
