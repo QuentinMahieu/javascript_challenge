@@ -29,6 +29,13 @@ function dropdownValues(data,tag,key){
         };
     };
 };
+function selectValue(data,tag,selection){
+    d3.selectAll(tag + '> option').remove();
+    var dropDown = d3.select(tag);
+    dropDown.append('option').text(selection);
+    dropDown.append('option').text('All');  
+};
+
 dropdownValues(tableData,'#mylist-Date','datetime');
 dropdownValues(tableData,'#mylist-City','city');
 dropdownValues(tableData,'#mylist-State','state');
@@ -66,37 +73,45 @@ function runSelect(){
         dropdownValues(filteredData,'#mylist-Shape','shape');
         if (city !== 'All'){
             var filteredData = filteredData.filter(x => x.city === city);
+            selectValue(filteredData,'#mylist-City',city);
             dropdownValues(filteredData,'#mylist-State','state');
             dropdownValues(filteredData,'#mylist-Country','country');
             dropdownValues(filteredData,'#mylist-Shape','shape');
             if (state !== 'All'){
                 var filteredData = filteredData.filter(x => x.state === state);
+                selectValue(filteredData,'#mylist-State',state);
                 dropdownValues(filteredData,'#mylist-Country','country');
                 dropdownValues(filteredData,'#mylist-Shape','shape');
                 if (country !== 'All'){
                     var filteredData = filteredData.filter(x => x.country === country);
+                    selectValue(filteredData,'#mylist-Country',country);
                     dropdownValues(filteredData,'#mylist-Shape','shape');
                     if (shape !== 'All'){
                         var filteredData = filteredData.filter(x => x.shape === shape);
+                        selectValue(filteredData,'#mylist-Shape',shape);
                     }
                 }else{
                     if (shape !== 'All'){
                         var filteredData = filteredData.filter(x => x.shape === shape);
+                        selectValue(filteredData,'#mylist-Shape',shape);
                         dropdownValues(filteredData,'#mylist-Country','country');
                     }
                 }
             }else{
                 if (country !== 'All'){
                     var filteredData = filteredData.filter(x => x.country === country);
+                    selectValue(filteredData,'#mylist-Country',country);
                     dropdownValues(filteredData,'#mylist-State','state');
                     dropdownValues(filteredData,'#mylist-Shape','shape');
                     if (shape !== 'All'){
                         var filteredData = filteredData.filter(x => x.shape === shape);
+                        selectValue(filteredData,'#mylist-Shape',shape);
                         dropdownValues(filteredData,'#mylist-State','state');
                     }
                 }else{
                     if (shape !== 'All'){
                         var filteredData = filteredData.filter(x => x.shape === shape);
+                        selectValue(filteredData,'#mylist-Shape',shape);
                         dropdownValues(filteredData,'#mylist-Country','country');
                         dropdownValues(filteredData,'#mylist-State','state');
                     }
@@ -105,20 +120,24 @@ function runSelect(){
         }else{
             if (state !== 'All'){
                 var filteredData = filteredData.filter(x => x.state === state);
+                selectValue(filteredData,'#mylist-State',state);
                 dropdownValues(filteredData,'#mylist-City','city');
                 dropdownValues(filteredData,'#mylist-Country','country');
                 dropdownValues(filteredData,'#mylist-Shape','shape');
                 if (country !== 'All'){
                     var filteredData = filteredData.filter(x => x.country === country);
+                    selectValue(filteredData,'#mylist-Country',country);
                     dropdownValues(filteredData,'#mylist-City','city');
                     dropdownValues(filteredData,'#mylist-Shape','shape');
                     if (shape !== 'All'){
                         var filteredData = filteredData.filter(x => x.shape === shape);
+                        selectValue(filteredData,'#mylist-Shape',shape);
                         dropdownValues(filteredData,'#mylist-City','city');
                     }
                 }else{
                     if (shape !== 'All'){
                         var filteredData = filteredData.filter(x => x.shape === shape);
+                        selectValue(filteredData,'#mylist-Shape',shape);
                         dropdownValues(filteredData,'#mylist-City','city');
                         dropdownValues(filteredData,'#mylist-Country','country');
                         dropdownValues(filteredData,'#mylist-Shape','shape');
@@ -127,17 +146,20 @@ function runSelect(){
             }else{
                 if (country !== 'All'){
                     var filteredData = filteredData.filter(x => x.country === country);
+                    selectValue(filteredData,'#mylist-Country',country);
                     dropdownValues(filteredData,'#mylist-State','state');
                     dropdownValues(filteredData,'#mylist-City','city');
                     dropdownValues(filteredData,'#mylist-Shape','shape');
                     if (shape !== 'All'){
                         var filteredData = filteredData.filter(x => x.shape === shape);
+                        selectValue(filteredData,'#mylist-Shape',shape);
                         dropdownValues(filteredData,'#mylist-City','city');
                         dropdownValues(filteredData,'#mylist-State','state');
                     }
                 }else{
                     if (shape !== 'All'){
                         var filteredData = filteredData.filter(x => x.shape === shape);
+                        selectValue(filteredData,'#mylist-Shape',shape);
                         dropdownValues(filteredData,'#mylist-City','city');
                         dropdownValues(filteredData,'#mylist-State','state');
                         dropdownValues(filteredData,'#mylist-Country','country');
@@ -155,20 +177,24 @@ function runSelect(){
             dropdownValues(filteredData,'#mylist-Shape','shape');
             if (state !== 'All'){
                 var filteredData = filteredData.filter(x => x.state === state);
+                selectValue(filteredData,'#mylist-State',state);
                 dropdownValues(filteredData,'#mylist-Date','datetime');
                 dropdownValues(filteredData,'#mylist-Country','country');
                 dropdownValues(filteredData,'#mylist-Shape','shape');
                 if (country !== 'All'){
                     var filteredData = filteredData.filter(x => x.country === country);
+                    selectValue(filteredData,'#mylist-Country',country);
                     dropdownValues(filteredData,'#mylist-Date','datetime');
                     dropdownValues(filteredData,'#mylist-Shape','shape');
                     if (shape !== 'All'){
                         var filteredData = filteredData.filter(x => x.shape === shape);
+                        selectValue(filteredData,'#mylist-Shape',shape);
                         dropdownValues(filteredData,'#mylist-Date','datetime');
                     }
                 }else{
                     if (shape !== 'All'){
                     var filteredData = filteredData.filter(x => x.shape === shape);
+                    selectValue(filteredData,'#mylist-Shape',shape);
                     dropdownValues(filteredData,'#mylist-Country','country');
                     dropdownValues(filteredData,'#mylist-Date','datetime');
                     }
@@ -176,17 +202,20 @@ function runSelect(){
             }else{
                 if (country !== 'All'){
                     var filteredData = filteredData.filter(x => x.country === country);
+                    selectValue(filteredData,'#mylist-Country',country);
                     dropdownValues(filteredData,'#mylist-State','state');
                     dropdownValues(filteredData,'#mylist-Date','datetime');
                     dropdownValues(filteredData,'#mylist-Shape','shape');
                     if (shape !== 'All'){
                         var filteredData = filteredData.filter(x => x.shape === shape);
+                        selectValue(filteredData,'#mylist-Shape',shape);
                         dropdownValues(filteredData,'#mylist-Date','datetime');
                         dropdownValues(filteredData,'#mylist-State','state');
                     }
                 }else{
                     if (shape !== 'All'){
                         var filteredData = filteredData.filter(x => x.shape === shape);
+                        selectValue(filteredData,'#mylist-Shape',shape);
                         dropdownValues(filteredData,'#mylist-Country','country');
                         dropdownValues(filteredData,'#mylist-Date','datetime');
                         dropdownValues(filteredData,'#mylist-State','state');
@@ -202,17 +231,20 @@ function runSelect(){
                 dropdownValues(filteredData,'#mylist-Shape','shape');
                 if (country !== 'All'){
                     var filteredData = filteredData.filter(x => x.country === country);
+                    selectValue(filteredData,'#mylist-Country',country);
                     dropdownValues(filteredData,'#mylist-City','city');
                     dropdownValues(filteredData,'#mylist-Date','date');
                     dropdownValues(filteredData,'#mylist-Shape','shape');
                     if (shape !== 'All'){
                         var filteredData = filteredData.filter(x => x.shape === shape);
+                        selectValue(filteredData,'#mylist-Shape',shape);
                         dropdownValues(filteredData,'#mylist-City','city');
                         dropdownValues(filteredData,'#mylist-Date','datetime');
                     }
                 }else{
                     if (shape !== 'All'){
                         var filteredData = filteredData.filter(x => x.shape === shape);
+                        selectValue(filteredData,'#mylist-Shape',shape);
                         dropdownValues(filteredData,'#mylist-City','city');
                         dropdownValues(filteredData,'#mylist-Country','country');
                         dropdownValues(filteredData,'#mylist-Date','datetime');
@@ -227,6 +259,7 @@ function runSelect(){
                     dropdownValues(filteredData,'#mylist-Shape','shape');
                     if (shape !== 'All'){
                         var filteredData = filteredData.filter(x => x.shape === shape);
+                        selectValue(filteredData,'#mylist-Shape',shape);
                         dropdownValues(filteredData,'#mylist-City','city');
                         dropdownValues(filteredData,'#mylist-State','state');
                         dropdownValues(filteredData,'#mylist-Date','datetime');
